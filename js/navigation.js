@@ -122,7 +122,7 @@ class NavigationBar {
     generateRegularItem(item) {
         const isActive = this.isItemActive(item);
         const activeClass = isActive ? ' active' : '';
-        const link = item.link === 'home' ? this.getHomeLink() : createLink(item.link);
+        const link = item.link === 'home' ? createLink('') : createLink(item.link);
         
         return `
             <li class="nav-item">
