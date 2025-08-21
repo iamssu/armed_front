@@ -1,4 +1,4 @@
-# Armed Front Picnic
+# Armed Front
 
 Bootstrap과 마루부리 폰트를 사용한 반응형 웹사이트입니다.
 
@@ -105,4 +105,4 @@ Google Fonts에서 다른 폰트를 선택하여 `index.html`의 폰트 링크�
 
 ---
 
-**Armed Front Picnic** - 모던하고 반응형인 웹사이트 
+**Armed Front** - 모던하고 반응형인 웹사이트 

@@ -244,5 +244,5 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // 페이지 로드 시 초기 설정
-    console.log('Armed Front Picnic 웹사이트가 로드되었습니다!');
+    console.log('Armed Front 웹사이트가 로드되었습니다!');
 }); 
