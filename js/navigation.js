@@ -8,10 +8,10 @@ class NavigationBar {
     // 기본 설정 (설정 파일이 없을 때 사용)
     getDefaultConfig() {
         return {
-            brand: 'Armed Front Picnic',
+            brand: '건강한 우리, 무장전선',
             menuStructure: [
                 {
-                    text: '홈',
+                    text: 'HOME',
                     type: 'link',
                     link: 'home'
                 },
@@ -26,17 +26,17 @@ class NavigationBar {
                             description: '2025년 무장전선 하계 야유회'
                         }
                     ]
-                },
-                {
-                    text: '소개',
-                    type: 'link',
-                    link: '#about'
-                },
-                {
-                    text: '연락처',
-                    type: 'link',
-                    link: '#contact'
                 }
+                // {
+                //     text: '소개',
+                //     type: 'link',
+                //     link: '#about'
+                // },
+                // {
+                //     text: '연락처',
+                //     type: 'link',
+                //     link: '#contact'
+                // }
             ],
             pageMetadata: {
                 '250823.html': {

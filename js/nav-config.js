@@ -30,7 +30,7 @@ const NAVIGATION_CONFIG = {
                 //     description: '2025년 새로운 행사'
                 // }
             ]
-        },
+        }
         // {
         //     text: '2026',
         //     type: 'dropdown',
@@ -44,11 +44,11 @@ const NAVIGATION_CONFIG = {
         //         // }
         //     ]
         // },
-        {
-            text: '소개',
-            type: 'link',
-            link: '#about'
-        }
+        // {
+        //     text: '소개',
+        //     type: 'link',
+        //     link: '#about'
+        // }
     ],
     
     // 페이지별 메타데이터
