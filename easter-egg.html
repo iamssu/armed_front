@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 무장전선 미니게임 - 이스터에그</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- 마루부리 폰트 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- 커스텀 CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- 동적 경로 감지 스크립트 -->
+    <script>
+        // GitHub Pages 배포 경로 감지 함수
+        function getBasePath() {
+            const pathname = window.location.pathname;
+            const hostname = window.location.hostname;
+            
+            // GitHub Pages 도메인인지 확인
+            if (hostname.includes('github.io')) {
+                // armed_front repository로 배포된 경우
+                if (pathname.startsWith('/armed_front/') || pathname === '/armed_front') {
+                    return '/armed_front/';
+                }
+                
+                // 다른 repository 이름이 있을 경우를 대비한 일반적인 감지
+                const pathSegments = pathname.split('/').filter(segment => segment.length > 0);
+                if (pathSegments.length > 0 && pathSegments[0] === 'armed_front') {
+                    return '/armed_front/';
+                }
+            }
+            
+            return '/';
+        }
+        
+        // 링크 생성 헬퍼 함수
+        function createLink(path) {
+            const basePath = getBasePath();
+            return basePath + path;
+        }
+        
+        // CSS와 JS 파일 경로 수정
+        document.addEventListener('DOMContentLoaded', function() {
+            const basePath = getBasePath();
+            
+            // CSS 파일 경로 수정
+            const cssLink = document.querySelector('link[href="css/style.css"]');
+            if (cssLink) {
+                cssLink.href = basePath + 'css/style.css';
+            }
+            
+            // JS 파일들을 동적으로 로드
+            const jsFiles = [
+                'js/nav-config.js',
+                'js/navigation.js',
+                'js/script.js'
+            ];
+            
+            jsFiles.forEach((file, index) => {
+                const script = document.createElement('script');
+                script.src = basePath + file;
+                script.onload = function() {
+                    // 모든 스크립트가 로드된 후 네비게이션 초기화
+                    if (index === jsFiles.length - 1) {
+                        const nav = new NavigationBar();
+                        nav.render();
+                    }
+                };
+                document.head.appendChild(script);
+            });
+        });
+    </script>
+    
+    <style>
+        .game-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .game-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .secret-text {
+            font-size: 0.8rem;
+            color: white;
+            font-style: italic;
+        }
+        
+        .easter-egg-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 0;
+        }
+        
+        .game-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+        }
+        
+        .game-modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: #000;
+        }
+        
+        .game-area {
+            text-align: center;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+        
+        .click-target {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 50%;
+            display: inline-block;
+            cursor: pointer;
+            transition: transform 0.1s;
+            user-select: none;
+        }
+        
+        .click-target:active {
+            transform: scale(0.95);
+        }
+        
+        .reaction-box {
+            width: 200px;
+            height: 200px;
+            background: #28a745;
+            margin: 1rem auto;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: background-color 0.3s;
+        }
+        
+        .reaction-box.waiting {
+            background: #ffc107;
+        }
+        
+        .reaction-box.clicked {
+            background: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <!-- 네비게이션 바 컨테이너 -->
+    <div id="navbar-container"></div>
+
+    <!-- 메인 콘텐츠 -->
+    <main>
+        <!-- 이스터에그 헤더 -->
+        <section class="easter-egg-header">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-12">
+                        <h1 class="display-3 fw-bold mb-3">무장전선 미니게임</h1>
+                        <p class="lead mb-4">건강한 우리, 게임으로 무장하다!</p>
+                        <p class="secret-text">💡 이스터에그를 발견해버렸네! 게임을 시작하지!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 게임 목록 -->
+        <section class="py-5">
+            <div class="container">
+                <div class="row g-4">
+                    <!-- 1. 터치 속도 테스트 -->
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card game-card h-100" onclick="openGame('speedTest')">
+                            <div class="card-body text-center">
+                                <div class="game-icon">⚡</div>
+                                <h5 class="card-title">터치 속도 테스트</h5>
+                                <p class="card-text">10초 동안 얼마나 빠르게 클릭하려나?</p>
+                                <small class="text-muted">클릭하여 게임 시작</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. 반응 속도 테스트 -->
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card game-card h-100" onclick="openGame('reactionTest')">
+                            <div class="card-body text-center">
+                                <div class="game-icon">🎯</div>
+                                <h5 class="card-title">반응 속도 테스트</h5>
+                                <p class="card-text">색이 변하는 순간 빠르게 클릭하기!</p>
+                                <small class="text-muted">클릭하여 게임 시작</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. 숫자 맞추기 -->
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card game-card h-100" onclick="openGame('numberGuess')">
+                            <div class="card-body text-center">
+                                <div class="game-icon">🔢</div>
+                                <h5 class="card-title">숫자 맞추기</h5>
+                                <p class="card-text">1부터 100 사이의 숫자를 최소한의 시도로 맞추기!</p>
+                                <small class="text-muted">클릭하여 게임 시작</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 푸터 -->
+    <footer class="bg-dark text-light py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="mb-0">&copy; 2025 Armed Front. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 게임 모달 -->
+    <div id="gameModal" class="game-modal">
+        <div class="game-modal-content">
+            <span class="close" onclick="closeGame()">&times;</span>
+            <div id="gameContent"></div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- 게임 스크립트 -->
+    <script src="js/easter-egg-games.js"></script>
+</body>
+</html> 
