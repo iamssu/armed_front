@@ -93,7 +93,7 @@ class NavigationBar {
         return `
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                 <div class="container">
-                    <a class="navbar-brand" href="${this.getHomeLink()}">${this.config.brand}</a>
+                    <a class="navbar-brand" href="${createLink('')}">${this.config.brand}</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -122,7 +122,7 @@ class NavigationBar {
     generateRegularItem(item) {
         const isActive = this.isItemActive(item);
         const activeClass = isActive ? ' active' : '';
-        const link = item.link === 'home' ? this.getHomeLink() : this.getHomeLink() + item.link;
+        const link = item.link === 'home' ? this.getHomeLink() : createLink(item.link);
         
         return `
             <li class="nav-item">
@@ -136,7 +136,7 @@ class NavigationBar {
         const dropdownItems = item.items.map(dropdownItem => {
             const isActive = this.isDropdownItemActive(dropdownItem);
             const activeClass = isActive ? ' active' : '';
-            const link = this.getHomeLink() + dropdownItem.link;
+            const link = createLink(dropdownItem.link);
             
             return `
                 <li><a class="dropdown-item${activeClass}" href="${link}">${dropdownItem.text}</a></li>
@@ -197,7 +197,7 @@ class NavigationBar {
                 return `
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb justify-content-center">
-                            <li class="breadcrumb-item"><a href="${this.getHomeLink()}">홈</a></li>
+                            <li class="breadcrumb-item"><a href="${createLink('')}">홈</a></li>
                             <li class="breadcrumb-item"><a href="#">${this.currentPage.year}</a></li>
                             <li class="breadcrumb-item active" aria-current="page">${metadata.breadcrumb}</li>
                         </ol>

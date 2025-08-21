@@ -15,6 +15,42 @@
     
     <!-- 커스텀 CSS -->
     <link rel="stylesheet" href="../../css/style.css">
+    
+    <!-- 동적 경로 감지 스크립트 -->
+    <script>
+        // GitHub Pages 배포 경로 감지 함수
+        function getBasePath() {
+            const pathname = window.location.pathname;
+            // GitHub Pages에서 armed_front/ 경로로 배포되는 경우 감지
+            if (pathname.includes('/armed_front/')) {
+                return '/armed_front/';
+            }
+            return '/';
+        }
+        
+        // 링크 생성 헬퍼 함수
+        function createLink(path) {
+            const basePath = getBasePath();
+            return basePath + path;
+        }
+        
+        // CSS와 JS 파일 경로 수정
+        document.addEventListener('DOMContentLoaded', function() {
+            const basePath = getBasePath();
+            
+            // CSS 파일 경로 수정
+            const cssLink = document.querySelector('link[href="../../css/style.css"]');
+            if (cssLink) {
+                cssLink.href = basePath + 'css/style.css';
+            }
+            
+            // JS 파일 경로 수정
+            const jsScript = document.querySelector('script[src="../../js/script.js"]');
+            if (jsScript) {
+                jsScript.src = basePath + 'js/script.js';
+            }
+        });
+    </script>
 </head>
 <body>
     <!-- 네비게이션 바 컨테이너 -->

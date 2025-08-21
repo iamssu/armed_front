@@ -1,6 +1,22 @@
 // 네비게이션 설정 파일
 // 새로운 페이지를 추가할 때 이 파일만 수정하면 됩니다.
 
+// GitHub Pages 배포 경로 감지 함수
+function getBasePath() {
+    const pathname = window.location.pathname;
+    // GitHub Pages에서 armed_front/ 경로로 배포되는 경우 감지
+    if (pathname.includes('/armed_front/')) {
+        return '/armed_front/';
+    }
+    return '/';
+}
+
+// 링크 생성 헬퍼 함수
+function createLink(path) {
+    const basePath = getBasePath();
+    return basePath + path;
+}
+
 const NAVIGATION_CONFIG = {
     // 브랜드 정보
     brand: '건강한 우리, 무장전선',
@@ -68,4 +84,6 @@ const NAVIGATION_CONFIG = {
 };
 
 // 전역으로 내보내기
-window.NAVIGATION_CONFIG = NAVIGATION_CONFIG; 
+window.NAVIGATION_CONFIG = NAVIGATION_CONFIG;
+window.getBasePath = getBasePath;
+window.createLink = createLink; 
